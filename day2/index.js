@@ -20,6 +20,20 @@ const isRepeatedTwice = (n) => {
   return left + left === s;
 };
 
+const isRepeatedPattern = (n) => {
+  const s = String(n);
+  const len = s.length;
+  // Check all divisor lengths that produce at least 2 repeats
+  for (let patternLen = 1; patternLen <= len / 2; patternLen += 1) {
+    if (len % patternLen !== 0) continue;
+    const repeats = len / patternLen;
+    if (repeats < 2) continue;
+    const unit = s.slice(0, patternLen);
+    if (unit.repeat(repeats) === s) return true;
+  }
+  return false;
+};
+
 const part1 = (ranges) => {
   let total = 0;
   for (const { start, end } of ranges) {
@@ -32,8 +46,16 @@ const part1 = (ranges) => {
   return total;
 };
 
-const part2 = () => {
-  // Not required for now.
+const part2 = (ranges) => {
+  let total = 0;
+  for (const { start, end } of ranges) {
+    for (let n = start; n <= end; n += 1) {
+      if (isRepeatedPattern(n)) {
+        total += n;
+      }
+    }
+  }
+  return total;
 };
 
 const run = () => {
@@ -47,7 +69,9 @@ const run = () => {
   const realRanges = parseInput(realInput);
 
   console.log('Sample Part 1:', part1(sampleRanges));
+  console.log('Sample Part 2:', part2(sampleRanges));
   console.log('Real Part 1:', part1(realRanges));
+  console.log('Real Part 2:', part2(realRanges));
 };
 
 if (require.main === module) {
